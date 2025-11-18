@@ -37,6 +37,9 @@ def gcd(a: int, b: int) -> int:
     1
     """
     # PUT YOUR CODE HERE
+    while b != 0:
+        a, b = b, a % b
+    return a
     pass
 
 
@@ -63,7 +66,7 @@ def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[in
 
     # phi = (p-1)(q-1)
     # PUT YOUR CODE HERE
-    
+
     # Choose an integer e such that e and phi(n) are coprime
     e = random.randrange(1, phi)
 
