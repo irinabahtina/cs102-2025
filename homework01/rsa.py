@@ -52,6 +52,21 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     """
 
     # PUT YOUR CODE HERE
+    # алгоритм евклида
+    def extended_gcd(a, b):
+        if a == 0:
+            return b, 0, 1
+        gcd, x1, y1 = extended_gcd(b % a, a)
+        x = y1 - (b // a) * x1
+        y = x1
+        return gcd, x, y
+
+    gcd, x, y = extended_gcd(e, phi)
+    if gcd != 1:
+        return None
+    else:
+        # делаем результат положительным
+        return (x % phi + phi) % phi
     pass
 
 
@@ -62,10 +77,10 @@ def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[in
         raise ValueError("p and q cannot be equal")
 
     # n = pq
-    # PUT YOUR CODE HERE
+    n = p * q
 
     # phi = (p-1)(q-1)
-    # PUT YOUR CODE HERE
+    phi = (p - 1) * (q - 1)
 
     # Choose an integer e such that e and phi(n) are coprime
     e = random.randrange(1, phi)
