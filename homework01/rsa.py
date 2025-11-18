@@ -13,6 +13,18 @@ def is_prime(n: int) -> bool:
     False
     """
     # PUT YOUR CODE HERE
+    if n < 2:
+        return False
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+
+        # Проверяем нечет делители до кв корня
+    for i in range(3, int(n ** 0.5) + 1, 2):
+        if n % i == 0:
+            return False
+    return True
     pass
 
 
@@ -35,6 +47,7 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     >>> multiplicative_inverse(7, 40)
     23
     """
+
     # PUT YOUR CODE HERE
     pass
 
@@ -50,7 +63,7 @@ def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[in
 
     # phi = (p-1)(q-1)
     # PUT YOUR CODE HERE
-
+    
     # Choose an integer e such that e and phi(n) are coprime
     e = random.randrange(1, phi)
 
