@@ -21,11 +21,11 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
 
             # Проверяем не вышли ли за границы алфавита
             if char.isupper():
-                if new_code > ord('Z'):
+                if new_code > ord("Z"):
                     # Прыжок от Z к A
                     new_code = new_code - 26
             else:  # строчные буквы
-                if new_code > ord('z'):
+                if new_code > ord("z"):
                     # Прыжок от z к a
                     new_code = new_code - 26
 
@@ -61,11 +61,11 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
 
             # Проверяем, не вышли ли за границы алфавита
             if char.isupper():
-                if new_code < ord('A'):
+                if new_code < ord("A"):
                     # Прыжок от A к Z
                     new_code = new_code + 26
             else:  # строчные буквы
-                if new_code < ord('a'):
+                if new_code < ord("a"):
                     # Прыжок от a к z
                     new_code = new_code + 26
 
@@ -75,4 +75,5 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
         else:
             # Не буквы оставляем как есть
             plaintext += char
+
     return plaintext
