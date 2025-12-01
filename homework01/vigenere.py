@@ -11,18 +11,15 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     ciphertext = ""
     key_index = 0
 
+    # Приводим ключ к нижнему регистру для единообразия
+    keyword = keyword.lower()
+
     for char in plaintext:
         if char.isalpha():
-            # Берем текущий символ ключа (циклически)
+            # Берем текущий символ ключа
             key_char = keyword[key_index % len(keyword)]
+            shift = ord(key_char) - ord("a")
 
-            # Определяем сдвиг
-            if key_char.isupper():
-                shift = ord(key_char) - ord("A")
-            else:
-                shift = ord(key_char) - ord("a")
-
-            # Шифруем символ
             if char.isupper():
                 new_code = ord(char) + shift
                 if new_code > ord("Z"):
@@ -34,10 +31,11 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
                     new_code -= 26
                 ciphertext += chr(new_code)
 
-            # Переходим к следующему символу ключа
+            # Увеличиваем индекс ключа только для букв
             key_index += 1
         else:
-            # Не буквы оставляем как есть
+            # Небуквенные символы добавляем без изменений
+            # Не увеличиваем key_index
             ciphertext += char
     return ciphertext
 
@@ -55,18 +53,15 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
     plaintext = ""
     key_index = 0
 
+    # Приводим ключ к нижнему регистру для единообразия
+    keyword = keyword.lower()
+
     for char in ciphertext:
         if char.isalpha():
-            # Берем текущий символ ключа (циклически)
+            # Берем текущий символ ключа
             key_char = keyword[key_index % len(keyword)]
+            shift = ord(key_char) - ord("a")
 
-            # Определяем сдвиг
-            if key_char.isupper():
-                shift = ord(key_char) - ord("A")
-            else:
-                shift = ord(key_char) - ord("a")
-
-            # Дешифруем символ
             if char.isupper():
                 new_code = ord(char) - shift
                 if new_code < ord("A"):
@@ -78,10 +73,11 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
                     new_code += 26
                 plaintext += chr(new_code)
 
-            # Переходим к следующему символу ключа
+            # Увеличиваем индекс ключа только для букв
             key_index += 1
         else:
-            # Не буквы оставляем как есть
+            # Небуквенные символы добавляем без изменений
+            # Не увеличиваем key_index
             plaintext += char
 
     return plaintext
