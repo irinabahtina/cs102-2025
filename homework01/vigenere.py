@@ -18,19 +18,19 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
 
             # Определяем сдвиг
             if key_char.isupper():
-                shift = ord(key_char) - ord('A')
+                shift = ord(key_char) - ord("A")
             else:
-                shift = ord(key_char) - ord('a')
+                shift = ord(key_char) - ord("a")
 
             # Шифруем символ
             if char.isupper():
                 new_code = ord(char) + shift
-                if new_code > ord('Z'):
+                if new_code > ord("Z"):
                     new_code -= 26
                 ciphertext += chr(new_code)
             else:
                 new_code = ord(char) + shift
-                if new_code > ord('z'):
+                if new_code > ord("z"):
                     new_code -= 26
                 ciphertext += chr(new_code)
 
@@ -62,19 +62,19 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
 
             # Определяем сдвиг
             if key_char.isupper():
-                shift = ord(key_char) - ord('A')
+                shift = ord(key_char) - ord("A")
             else:
-                shift = ord(key_char) - ord('a')
+                shift = ord(key_char) - ord("a")
 
             # Дешифруем символ
             if char.isupper():
                 new_code = ord(char) - shift
-                if new_code < ord('A'):
+                if new_code < ord("A"):
                     new_code += 26
                 plaintext += chr(new_code)
             else:
                 new_code = ord(char) - shift
-                if new_code < ord('a'):
+                if new_code < ord("a"):
                     new_code += 26
                 plaintext += chr(new_code)
 
