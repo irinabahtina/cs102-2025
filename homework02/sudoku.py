@@ -5,7 +5,7 @@ T = tp.TypeVar("T")
 
 
 def read_sudoku(path: tp.Union[str, pathlib.Path]) -> tp.List[tp.List[str]]:
-    """ Прочитать Судоку из указанного файла """
+    """Прочитать Судоку из указанного файла"""
     path = pathlib.Path(path)
     with path.open() as f:
         puzzle = f.read()
@@ -19,15 +19,11 @@ def create_grid(puzzle: str) -> tp.List[tp.List[str]]:
 
 
 def display(grid: tp.List[tp.List[str]]) -> None:
-    """Вывод Судоку """
+    """Вывод Судоку"""
     width = 2
     line = "+".join(["-" * (width * 3)] * 3)
     for row in range(9):
-        print(
-            "".join(
-                grid[row][col].center(width) + ("|" if str(col) in "25" else "") for col in range(9)
-            )
-        )
+        print("".join(grid[row][col].center(width) + ("|" if str(col) in "25" else "") for col in range(9)))
         if str(row) in "25":
             print(line)
     print()
@@ -46,7 +42,7 @@ def group(values: tp.List[T], n: int) -> tp.List[tp.List[T]]:
 
     result = []
     for i in range(0, len(values), n):
-        result.append(values[i:i + n])
+        result.append(values[i : i + n])
     return result
 
 
@@ -59,8 +55,7 @@ def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_row([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (2, 0))
     ['.', '8', '9']
     """
-    row, _ = pos
-    return grid[row][:]
+    return grid[pos[0]]
 
 
 def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -109,7 +104,7 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     """
     for i in range(len(grid)):
         for j in range(len(grid[i])):
-            if grid[i][j] == '.':
+            if grid[i][j] == ".":
                 return (i, j)
     return None
 
@@ -127,20 +122,20 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     row, col = pos
 
     # Если позиция уже заполнена, возвращаем пустое множество
-    if grid[row][col] != '.':
+    if grid[row][col] != ".":
         return set()
 
     # Все возможные значения от 1 до 9
-    all_values = set('123456789')
+    all_values = set("123456789")
 
     # Убираем значения, которые уже есть в строке
-    row_values = set(get_row(grid, pos)) - {'.'}
+    row_values = set(get_row(grid, pos)) - {"."}
 
     # Убираем значения, которые уже есть в столбце
-    col_values = set(get_col(grid, pos)) - {'.'}
+    col_values = set(get_col(grid, pos)) - {"."}
 
     # Убираем значения, которые уже есть в блоке
-    block_values = set(get_block(grid, pos)) - {'.'}
+    block_values = set(get_block(grid, pos)) - {"."}
 
     # Объединяем все использованные значения
     used_values = row_values.union(col_values).union(block_values)
@@ -150,7 +145,7 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
 
 
 def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
-    """ Решение пазла, заданного в grid """
+    """Решение пазла, заданного в grid"""
     """ Как решать Судоку?
         1. Найти свободную позицию
         2. Найти все возможные значения, которые могут находиться на этой позиции
@@ -186,14 +181,14 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
             return solution
 
         # Если решение не найдено, откатываем изменения
-        grid[row][col] = '.'
+        grid[row][col] = "."
 
     # Если ни одно значение не подошло, возвращаем None
     return None
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
-    """ Если решение solution верно, то вернуть True, в противном случае False """
+    """Если решение solution верно, то вернуть True, в противном случае False"""
     # TODO: Add doctests with bad puzzles
     if solution is None:
         return False
@@ -201,20 +196,20 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
         # Проверяем, что все строки содержат цифры 1-9 без повторений
     for i in range(9):
         row = get_row(solution, (i, 0))
-        if set(row) != set('123456789'):
+        if set(row) != set("123456789"):
             return False
 
         # Проверяем, что все столбцы содержат цифры 1-9 без повторений
     for j in range(9):
         col = get_col(solution, (0, j))
-        if set(col) != set('123456789'):
+        if set(col) != set("123456789"):
             return False
 
         # Проверяем, что все блоки 3x3 содержат цифры 1-9 без повторений
     for i in range(0, 9, 3):
         for j in range(0, 9, 3):
             block = get_block(solution, (i, j))
-            if set(block) != set('123456789'):
+            if set(block) != set("123456789"):
                 return False
 
     return True
@@ -247,15 +242,15 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
 
     # Базовое полностью заполненное судоку
     base_sudoku = [
-        ['5', '3', '4', '6', '7', '8', '9', '1', '2'],
-        ['6', '7', '2', '1', '9', '5', '3', '4', '8'],
-        ['1', '9', '8', '3', '4', '2', '5', '6', '7'],
-        ['8', '5', '9', '7', '6', '1', '4', '2', '3'],
-        ['4', '2', '6', '8', '5', '3', '7', '9', '1'],
-        ['7', '1', '3', '9', '2', '4', '8', '5', '6'],
-        ['9', '6', '1', '5', '3', '7', '2', '8', '4'],
-        ['2', '8', '7', '4', '1', '9', '6', '3', '5'],
-        ['3', '4', '5', '2', '8', '6', '1', '7', '9']
+        ["5", "3", "4", "6", "7", "8", "9", "1", "2"],
+        ["6", "7", "2", "1", "9", "5", "3", "4", "8"],
+        ["1", "9", "8", "3", "4", "2", "5", "6", "7"],
+        ["8", "5", "9", "7", "6", "1", "4", "2", "3"],
+        ["4", "2", "6", "8", "5", "3", "7", "9", "1"],
+        ["7", "1", "3", "9", "2", "4", "8", "5", "6"],
+        ["9", "6", "1", "5", "3", "7", "2", "8", "4"],
+        ["2", "8", "7", "4", "1", "9", "6", "3", "5"],
+        ["3", "4", "5", "2", "8", "6", "1", "7", "9"],
     ]
 
     # Ограничиваем N в диапазоне 0-81
@@ -275,7 +270,7 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     for k in range(empty_count):
         if k < len(positions):
             i, j = positions[k]
-            result[i][j] = '.'
+            result[i][j] = "."
 
     return result
 
