@@ -41,7 +41,13 @@ def group(values: tp.List[T], n: int) -> tp.List[tp.List[T]]:
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    pass
+    if len(values) % n != 0:
+        raise ValueError("Длина списка должна быть кратна n")
+
+    result = []
+    for i in range(0, len(values), n):
+        result.append(values[i:i + n])
+    return result
 
 
 def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -53,7 +59,8 @@ def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_row([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (2, 0))
     ['.', '8', '9']
     """
-    pass
+    row, _ = pos
+    return grid[row][:]
 
 
 def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -65,7 +72,8 @@ def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    pass
+    _, col = pos
+    return [grid[row][col] for row in range(len(grid))]
 
 
 def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -78,7 +86,16 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
     >>> get_block(grid, (8, 8))
     ['2', '8', '.', '.', '.', '5', '.', '7', '9']
     """
-    pass
+    row, col = pos
+    # Определяем начало блока 3x3
+    block_row = (row // 3) * 3
+    block_col = (col // 3) * 3
+
+    values = []
+    for i in range(block_row, block_row + 3):
+        for j in range(block_col, block_col + 3):
+            values.append(grid[i][j])
+    return values
 
 
 def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[int, int]]:
@@ -90,7 +107,11 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    pass
+    for i in range(len(grid)):
+        for j in range(len(grid[i])):
+            if grid[i][j] == '.':
+                return (i, j)
+    return None
 
 
 def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.Set[str]:
@@ -103,7 +124,29 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     >>> values == {'2', '5', '9'}
     True
     """
-    pass
+    row, col = pos
+
+    # Если позиция уже заполнена, возвращаем пустое множество
+    if grid[row][col] != '.':
+        return set()
+
+    # Все возможные значения от 1 до 9
+    all_values = set('123456789')
+
+    # Убираем значения, которые уже есть в строке
+    row_values = set(get_row(grid, pos)) - {'.'}
+
+    # Убираем значения, которые уже есть в столбце
+    col_values = set(get_col(grid, pos)) - {'.'}
+
+    # Убираем значения, которые уже есть в блоке
+    block_values = set(get_block(grid, pos)) - {'.'}
+
+    # Объединяем все использованные значения
+    used_values = row_values.union(col_values).union(block_values)
+
+    # Возвращаем разность между всеми возможными и использованными значениями
+    return all_values - used_values
 
 
 def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
@@ -118,13 +161,63 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     >>> solve(grid)
     [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
     """
-    pass
+    # Находим первую свободную позицию
+    empty_pos = find_empty_positions(grid)
+
+    # Если свободных позиций нет, значит пазл решен
+    if empty_pos is None:
+        return grid
+
+    row, col = empty_pos
+
+    # Находим возможные значения для этой позиции
+    possible_values = find_possible_values(grid, empty_pos)
+
+    # Перебираем все возможные значения
+    for value in possible_values:
+        # Пробуем поставить значение
+        grid[row][col] = value
+
+        # Рекурсивно решаем оставшуюся часть
+        solution = solve(grid)
+
+        # Если решение найдено, возвращаем его
+        if solution is not None:
+            return solution
+
+        # Если решение не найдено, откатываем изменения
+        grid[row][col] = '.'
+
+    # Если ни одно значение не подошло, возвращаем None
+    return None
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
     # TODO: Add doctests with bad puzzles
-    pass
+    if solution is None:
+        return False
+
+        # Проверяем, что все строки содержат цифры 1-9 без повторений
+    for i in range(9):
+        row = get_row(solution, (i, 0))
+        if set(row) != set('123456789'):
+            return False
+
+        # Проверяем, что все столбцы содержат цифры 1-9 без повторений
+    for j in range(9):
+        col = get_col(solution, (0, j))
+        if set(col) != set('123456789'):
+            return False
+
+        # Проверяем, что все блоки 3x3 содержат цифры 1-9 без повторений
+    for i in range(0, 9, 3):
+        for j in range(0, 9, 3):
+            block = get_block(solution, (i, j))
+            if set(block) != set('123456789'):
+                return False
+
+    return True
 
 
 def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
@@ -148,7 +241,43 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     >>> check_solution(solution)
     True
     """
-    pass
+    # Создаем полностью заполненное корректное судоку
+    # Можно использовать простое решение - начать с известного правильного судоку
+    # и удалить нужное количество элементов
+
+    # Базовое полностью заполненное судоку
+    base_sudoku = [
+        ['5', '3', '4', '6', '7', '8', '9', '1', '2'],
+        ['6', '7', '2', '1', '9', '5', '3', '4', '8'],
+        ['1', '9', '8', '3', '4', '2', '5', '6', '7'],
+        ['8', '5', '9', '7', '6', '1', '4', '2', '3'],
+        ['4', '2', '6', '8', '5', '3', '7', '9', '1'],
+        ['7', '1', '3', '9', '2', '4', '8', '5', '6'],
+        ['9', '6', '1', '5', '3', '7', '2', '8', '4'],
+        ['2', '8', '7', '4', '1', '9', '6', '3', '5'],
+        ['3', '4', '5', '2', '8', '6', '1', '7', '9']
+    ]
+
+    # Ограничиваем N в диапазоне 0-81
+    N = max(0, min(81, N))
+
+    # Количество позиций, которые нужно оставить пустыми
+    empty_count = 81 - N
+
+    # Создаем копию базового судоку
+    result = [row[:] for row in base_sudoku]
+
+    # Заполняем позиции точками в определенном порядке
+    # Можно использовать простой порядок: по строкам, затем по столбцам
+    positions = [(i, j) for i in range(9) for j in range(9)]
+
+    # Очищаем первые empty_count позиций
+    for k in range(empty_count):
+        if k < len(positions):
+            i, j = positions[k]
+            result[i][j] = '.'
+
+    return result
 
 
 if __name__ == "__main__":
