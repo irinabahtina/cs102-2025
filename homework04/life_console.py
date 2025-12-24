@@ -19,16 +19,12 @@ class Console(UI):
         # Рисуем горизонтальные границы (верхнюю и нижнюю)
         for x in range(1, width - 2):  # Изменено: width - 2 вместо width - 1
             screen.addch(0, x, "-")  # Верхняя граница
-            screen.addch(
-                height - 2, x, "-"
-            )  # Нижняя граница (height - 2 вместо height - 1)
+            screen.addch(height - 2, x, "-")  # Нижняя граница (height - 2 вместо height - 1)
 
         # Рисуем вертикальные границы (левую и правую)
         for y in range(1, height - 2):  # Изменено: height - 2 вместо height - 1
             screen.addch(y, 0, "|")  # Левая граница
-            screen.addch(
-                y, width - 2, "|"
-            )  # Правая граница (width - 2 вместо width - 1)
+            screen.addch(y, width - 2, "|")  # Правая граница (width - 2 вместо width - 1)
 
         # Рисуем углы рамки
         screen.addch(0, 0, "+")

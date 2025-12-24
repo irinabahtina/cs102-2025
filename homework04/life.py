@@ -65,9 +65,7 @@ class GameOfLife:
                 # Проверяем, что сосед находится в пределах поля
                 if 0 <= neighbour_row < self.rows and 0 <= neighbour_col < self.cols:
                     # Добавляем значение соседа в список
-                    neighbours.append(
-                        self.curr_generation[neighbour_row][neighbour_col]
-                    )
+                    neighbours.append(self.curr_generation[neighbour_row][neighbour_col])
 
         return neighbours  # Возвращаем список значений всех соседей
 

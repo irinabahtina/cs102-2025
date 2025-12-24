@@ -167,9 +167,7 @@ class GUI(UI):
                         end_text = "Игра окончена!"
 
                     text = font.render(end_text, True, (255, 100, 100))
-                    text_rect = text.get_rect(
-                        center=(self.width // 2, self.height // 2)
-                    )
+                    text_rect = text.get_rect(center=(self.width // 2, self.height // 2))
                     self.screen.blit(text, text_rect)
                     pygame.display.flip()
                     pygame.time.wait(2000)
