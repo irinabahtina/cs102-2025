@@ -127,6 +127,10 @@ class GameOfLife:
         """
         # мой код:
 
+        # Проверяем что max_generations не None
+        if self.max_generations is None:
+            return False
+
         # Сравниваем текущее число поколений с максимальным
         # Возвращаем True, если поколений больше или равно максимальному
         return self.generations >= self.max_generations

@@ -74,7 +74,7 @@ class Console(UI):
 
         # Настраиваем curses
         curses.curs_set(0)  # Скрываем курсор
-        screen.nodelay(1)  # Неблокирующий ввод
+        screen.nodelay(True)  # Неблокирующий ввод (было 1, теперь True)
         screen.timeout(100)  # Таймаут 100 мс
 
         try:
@@ -145,7 +145,7 @@ def main():
     try:
         # Создаем игру с нужным размером
         # Размеры поля должны быть меньше размеров вашего терминала
-        life = GameOfLife((15, 30), randomize=True, max_generations=100)
+        life = GameOfLife((20, 40), randomize=True, max_generations=100)
 
         # Создаем консольный интерфейс
         console = Console(life)
