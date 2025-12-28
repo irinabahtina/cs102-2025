@@ -6,7 +6,7 @@ def encrypt_atbash(plaintext):
 
     # Проходим по каждому символу в исходном тексте
     for char in plaintext:
-        # Обрабатываем строчные буквы
+        # обрабатываем строчные буквы
         if "a" <= char <= "z":
             # Находим позицию буквы
             position = ord(char) - ord("a")
@@ -30,7 +30,7 @@ def encrypt_atbash(plaintext):
     return encrypted_text
 
 
-# Пример использования (можно удалить в финальной версии)
+# Пример использования
 if __name__ == "__main__":
     # Тестирование функции
     test_cases = [
