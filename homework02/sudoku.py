@@ -37,13 +37,7 @@ def group(values: tp.List[T], n: int) -> tp.List[tp.List[T]]:
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    if len(values) % n != 0:
-        raise ValueError("Длина списка должна быть кратна n")
-
-    result = []
-    for i in range(0, len(values), n):
-        result.append(values[i : i + n])
-    return result
+    return [values[i:i + n] for i in range(0, len(values), n)]
 
 
 def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -68,7 +62,7 @@ def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     ['3', '6', '9']
     """
     _, col = pos
-    return [grid[row][col] for row in range(len(grid))]
+    return [row[col] for row in grid]
 
 
 def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -102,9 +96,9 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    for i in range(len(grid)):
-        for j in range(len(grid[i])):
-            if grid[i][j] == ".":
+    for i, row in enumerate(grid):
+        for j, value in enumerate(row):
+            if value == ".":
                 return (i, j)
     return None
 
@@ -160,7 +154,7 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     empty_pos = find_empty_positions(grid)
 
     # Если свободных позиций нет, значит пазл решен
-    if empty_pos is None:
+    if not empty_pos:
         return grid
 
     row, col = empty_pos
@@ -177,7 +171,7 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
         solution = solve(grid)
 
         # Если решение найдено, возвращаем его
-        if solution is not None:
+        if solution:
             return solution
 
         # Если решение не найдено, откатываем изменения
@@ -190,7 +184,7 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     """Если решение solution верно, то вернуть True, в противном случае False"""
     # TODO: Add doctests with bad puzzles
-    if solution is None:
+    if not solution:
         return False
 
         # Проверяем, что все строки содержат цифры 1-9 без повторений
@@ -240,18 +234,25 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     # Можно использовать простое решение - начать с известного правильного судоку
     # и удалить нужное количество элементов
 
-    # Базовое полностью заполненное судоку
-    base_sudoku = [
-        ["5", "3", "4", "6", "7", "8", "9", "1", "2"],
-        ["6", "7", "2", "1", "9", "5", "3", "4", "8"],
-        ["1", "9", "8", "3", "4", "2", "5", "6", "7"],
-        ["8", "5", "9", "7", "6", "1", "4", "2", "3"],
-        ["4", "2", "6", "8", "5", "3", "7", "9", "1"],
-        ["7", "1", "3", "9", "2", "4", "8", "5", "6"],
-        ["9", "6", "1", "5", "3", "7", "2", "8", "4"],
-        ["2", "8", "7", "4", "1", "9", "6", "3", "5"],
-        ["3", "4", "5", "2", "8", "6", "1", "7", "9"],
-    ]
+    import random
+
+    # Создаём пустую сетку
+    grid = [['.' for _ in range(9)] for _ in range(9)]
+
+    # Заполняем диагональные блоки 3x3 (они независимы друг от друга)
+    for block_row in range(0, 9, 3):
+        numbers = list("123456789")
+        random.shuffle(numbers)
+        for i in range(3):
+            for j in range(3):
+                grid[block_row + i][block_row + j] = numbers[i * 3 + j]
+
+    # Решаем полученный пазл
+    solution = solve([row[:] for row in grid])  # создаем копию
+
+    if not solution:
+        # Если не удалось решить, возвращаем пустую сетку
+        return [['.' for _ in range(9)] for _ in range(9)]
 
     # Ограничиваем N в диапазоне 0-81
     N = max(0, min(81, N))
@@ -259,12 +260,12 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     # Количество позиций, которые нужно оставить пустыми
     empty_count = 81 - N
 
-    # Создаем копию базового судоку
-    result = [row[:] for row in base_sudoku]
-
-    # Заполняем позиции точками в определенном порядке
-    # Можно использовать простой порядок: по строкам, затем по столбцам
+    # Список всех позиций
     positions = [(i, j) for i in range(9) for j in range(9)]
+    random.shuffle(positions)
+
+    # Создаем копию решения и заменяем некоторые цифры точками
+    result = [row[:] for row in solution]
 
     # Очищаем первые empty_count позиций
     for k in range(empty_count):
