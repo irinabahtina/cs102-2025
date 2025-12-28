@@ -11,6 +11,8 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ''
     """
     ciphertext = ""
+    ALPHABET_SIZE = 26
+
     for char in plaintext:
         if char.isalpha():
             # Получаем код текущей буквы
@@ -23,11 +25,15 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
             if char.isupper():
                 if new_code > ord("Z"):
                     # Прыжок от Z к A
-                    new_code = new_code - 26
+                    new_code = new_code - ALPHABET_SIZE
+                elif new_code < ord("A"):  # Добавим и для отрицательных сдвигов
+                    new_code = new_code + ALPHABET_SIZE
             else:  # строчные буквы
                 if new_code > ord("z"):
                     # Прыжок от z к a
-                    new_code = new_code - 26
+                    new_code = new_code - ALPHABET_SIZE
+                elif new_code < ord("a"):  # Добавим и для отрицательных сдвигов
+                    new_code = new_code + ALPHABET_SIZE
 
             # Преобразуем код обратно в символ
             new_char = chr(new_code)
@@ -51,6 +57,8 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     ''
     """
     plaintext = ""
+    ALPHABET_SIZE = 26
+
     for char in ciphertext:
         if char.isalpha():
             # Получаем код текущей буквы
@@ -63,11 +71,15 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
             if char.isupper():
                 if new_code < ord("A"):
                     # Прыжок от A к Z
-                    new_code = new_code + 26
+                    new_code = new_code + ALPHABET_SIZE
+                elif new_code > ord("Z"):  # На случай отрицательного shift
+                    new_code = new_code - ALPHABET_SIZE
             else:  # строчные буквы
                 if new_code < ord("a"):
                     # Прыжок от a к z
-                    new_code = new_code + 26
+                    new_code = new_code + ALPHABET_SIZE
+                elif new_code > ord("z"):  # На случай отрицательного shift
+                    new_code = new_code - ALPHABET_SIZE
 
             # Преобразуем код обратно в символ
             new_char = chr(new_code)

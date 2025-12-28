@@ -4,28 +4,28 @@ def encrypt_atbash(plaintext):
     """
     encrypted_text = ""
 
+    ALPHABET_SIZE = 26
+    LAST_LETTER_INDEX = ALPHABET_SIZE - 1
+
     # Проходим по каждому символу в исходном тексте
     for char in plaintext:
         # обрабатываем строчные буквы
         if "a" <= char <= "z":
-            # Находим позицию буквы
-            position = ord(char) - ord("a")
-            # Вычисляем позицию отраженной буквы
-            mirrored_position = 25 - position
-            # Получаем отраженную букву
-            mirrored_char = chr(ord("a") + mirrored_position)
-            encrypted_text += mirrored_char
-
-        # ОБРАБАТЫВАЕМ ЗАГЛАВНЫЕ
+            alphabet_start = "a"
         elif "A" <= char <= "Z":
-            position = ord(char) - ord("A")
-            mirrored_position = 25 - position
-            mirrored_char = chr(ord("A") + mirrored_position)
-            encrypted_text += mirrored_char
-
-        # Все остальные символы оставляем
+            alphabet_start = "A"
         else:
+            # Если не буква, то оставляем
             encrypted_text += char
+            continue
+
+        # Находим позицию буквы в алфавите
+        position = ord(char) - ord(alphabet_start)
+        # Вычисляем позицию отраженной буквы
+        mirrored_position = LAST_LETTER_INDEX - position
+        # Получаем отраженную букву
+        mirrored_char = chr(ord(alphabet_start) + mirrored_position)
+        encrypted_text += mirrored_char
 
     return encrypted_text
 

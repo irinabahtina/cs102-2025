@@ -10,6 +10,7 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     """
     ciphertext = ""
     key_index = 0
+    ALPHABET_SIZE = 26
 
     # Очищаем ключ, оставляем только буквы
     clean_keyword = ""
@@ -32,10 +33,10 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
             # Шифруем
             if char.isupper():
                 base = ord("A")
-                encrypted_char = chr((ord(char) - base + shift) % 26 + base)
+                encrypted_char = chr((ord(char) - base + shift) % ALPHABET_SIZE + base)
             else:
                 base = ord("a")
-                encrypted_char = chr((ord(char) - base + shift) % 26 + base)
+                encrypted_char = chr((ord(char) - base + shift) % ALPHABET_SIZE + base)
 
             ciphertext += encrypted_char
             key_index += 1
@@ -59,6 +60,7 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
     """
     plaintext = ""
     key_index = 0
+    ALPHABET_SIZE = 26
 
     # Очищаем ключ, оставляем только буквы
     clean_keyword = ""
@@ -81,10 +83,10 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
             # Дешифруем
             if char.isupper():
                 base = ord("A")
-                decrypted_char = chr((ord(char) - base - shift) % 26 + base)
+                decrypted_char = chr((ord(char) - base - shift) % ALPHABET_SIZE + base)
             else:
                 base = ord("a")
-                decrypted_char = chr((ord(char) - base - shift) % 26 + base)
+                decrypted_char = chr((ord(char) - base - shift) % ALPHABET_SIZE + base)
 
             plaintext += decrypted_char
             key_index += 1
