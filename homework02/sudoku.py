@@ -37,7 +37,7 @@ def group(values: tp.List[T], n: int) -> tp.List[tp.List[T]]:
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    return [values[i:i + n] for i in range(0, len(values), n)]
+    return [values[i : i + n] for i in range(0, len(values), n)]
 
 
 def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -230,14 +230,10 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     >>> check_solution(solution)
     True
     """
-    # Создаем полностью заполненное корректное судоку
-    # Можно использовать простое решение - начать с известного правильного судоку
-    # и удалить нужное количество элементов
-
     import random
 
     # Создаём пустую сетку
-    grid = [['.' for _ in range(9)] for _ in range(9)]
+    grid = [["." for _ in range(9)] for _ in range(9)]
 
     # Заполняем диагональные блоки 3x3 (они независимы друг от друга)
     for block_row in range(0, 9, 3):
@@ -252,7 +248,7 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
 
     if not solution:
         # Если не удалось решить, возвращаем пустую сетку
-        return [['.' for _ in range(9)] for _ in range(9)]
+        return [["." for _ in range(9)] for _ in range(9)]
 
     # Ограничиваем N в диапазоне 0-81
     N = max(0, min(81, N))
