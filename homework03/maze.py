@@ -134,7 +134,8 @@ def shortest_path(
     x, y = exit_coord
 
     # Проверяем, что выход достижим
-    if not isinstance(grid[x][y], int) or grid[x][y] <= 0:
+    cell_value = grid[x][y]
+    if not isinstance(cell_value, int) or cell_value <= 0:
         return None
 
     # Находим вход (клетка со значением 1)
