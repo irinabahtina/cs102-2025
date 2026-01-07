@@ -155,15 +155,19 @@ def shortest_path(
     current_x, current_y = x, y
     current_value = grid[x][y]
 
+    if not isinstance(current_value, int):
+        return None
+
     while (current_x, current_y) != entrance and current_value > 1:
         found = False
         for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             nx, ny = current_x + dx, current_y + dy
             if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]):
-                if isinstance(grid[nx][ny], int) and grid[nx][ny] == current_value - 1:
+                cell_value = grid[nx][ny]
+                if isinstance(cell_value, int) and cell_value == current_value - 1:
                     path.append((nx, ny))
                     current_x, current_y = nx, ny
-                    current_value = grid[nx][ny]
+                    current_value = cell_value
                     found = True
                     break
 
